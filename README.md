@@ -9,4 +9,4 @@ Initially, there is only a single voice pinging away. As the score increases, so
 
 # To Run
 
-There are no binaries at the moment. Please run Main.pd before running the Unity project.
+There are no binaries at the moment. Please run PDWorkspace\Main.pd before running the Unity project.
