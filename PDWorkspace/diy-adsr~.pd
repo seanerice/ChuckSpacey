@@ -1,0 +1,178 @@
+#N canvas 0 50 1046 684 10;
+#X obj 173 478 r \$0-attack;
+#X obj 285 298 timer;
+#X obj 370 231 r \$0-attack;
+#X obj 380 260 r \$0-decay;
+#X obj 355 288 +;
+#X obj 355 259 f;
+#X obj 284 224 t b b;
+#X obj 286 391 >= 0;
+#X obj 286 346 t f f;
+#X obj 251 535 f;
+#X obj 266 508 r \$0-release;
+#X msg 233 566 0 \$1;
+#X obj 393 507 f;
+#X obj 393 532 pack f f f;
+#X obj 450 504 r \$0-release;
+#X obj 234 619 vline~;
+#X obj 286 420 sel 0 1;
+#X msg 393 561 \$1 \$2 \, 0 \$3 \$2;
+#X obj 286 323 expr $f2-$f1;
+#X obj 439 344 r \$0-decay;
+#X obj 414 368 min;
+#X obj 452 366 r \$0-release;
+#X obj 414 389 min;
+#X text 53 302 [attack \, decay \, sustain];
+#X text 289 116 [release];
+#X obj 46 329 r \$0-velocity;
+#X obj 89 535 pack f f f f f;
+#X msg 89 560 \$1 \$2 \, \$3 \$4 \$5;
+#X obj 131 429 *;
+#X obj 73 384 t f f;
+#X obj 502 420 r \$0-sustain;
+#X obj 478 399 r \$0-velocity;
+#X obj 479 446 *;
+#X obj 234 639 outlet~;
+#X obj 284 141 r \$0-velocity;
+#X obj 284 186 sel 1 0;
+#X obj 564 82 inlet velocity;
+#X obj 123 355 r \$0-attack;
+#X obj 146 403 r \$0-sustain;
+#X obj 137 454 r \$0-decay;
+#X obj 660 167 s \$0-attack;
+#X obj 733 167 s \$0-decay;
+#X obj 800 166 s \$0-sustain;
+#X obj 887 166 s \$0-release;
+#X obj 564 167 s \$0-velocity;
+#X obj 920 135 unpack \$1 \$2 \$3 \$4;
+#X obj 938 111 loadbang;
+#X obj 564 134 / 127;
+#X obj 564 110 clip 0 127;
+#X obj 284 165 > 0;
+#X obj 46 353 sel 0;
+#X text 602 50 inlets for individual parameters;
+#X text 38 65 ---------------------------------------------------------
+;
+#X text 908 88 creation arguments for ADSR;
+#X text 37 12 Finally \, we are ready to add all our pieces together
+to make our ADSR envelope generator. We want to make this re-usable
+in other patches \, so we add unique values for our sends and receives
+with \$0-xxxxxxx;
+#X text 580 190 Note that the midi standard is for full velocity to
+be 127 \, so that's what we are expecting at our inlet \, and then
+we scale by dividing by 127 You can change this so that the patch just
+accepts 0->1 scale directly if that is easier for you and you don't
+want to follow midi standards.;
+#X text 580 268 The attack \, decay and release are all accepting millisecond
+values \, as that seems the clearest way \, but again \, if you prefer
+to use midi standards \, or scale 0->1 \, then that is an easy modification.
+;
+#X text 578 329 Sustain here takes a 0->1 value. You can change that
+too \, depending on what type of controller you wish to use.;
+#X text 668 581 On the next page \, we take all this \, and save at
+as a patch called [diy-adsr~] that can be re-used as an abstraction.
+We use this envelope to shape the overall volume \, as well as add
+countour to the filter [vcf~] object.;
+#X obj 701 -64 vsl 12 60 1 10000 1 1 empty empty A 0 -9 0 10 -262144
+-1 -1 3946 1;
+#X obj 736 -64 vsl 12 60 1 10000 1 1 empty empty D 0 -9 0 10 -262144
+-1 -1 3342 1;
+#X obj 772 -64 vsl 12 60 0 1 0 1 empty empty S 0 -9 0 10 -262144 -1
+-1 0 1;
+#X obj 806 -64 vsl 12 60 1 30000 1 1 empty empty R 0 -9 0 10 -262144
+-1 -1 0 1;
+#X floatatom 701 10 5 0 0 0 - - -;
+#X floatatom 736 11 5 0 0 0 - - -;
+#X floatatom 772 11 5 0 0 0 - - -;
+#X floatatom 806 11 5 0 0 0 - - -;
+#X obj 391 -57 line;
+#X msg 393 -78 \$1 \$2;
+#X obj 481 -47 line;
+#X msg 481 -68 \$1 \$2;
+#X obj 580 -37 line;
+#X msg 580 -58 \$1 \$2;
+#X obj 568 -15 clip 0 1;
+#X obj 643 -144 inlet adsr;
+#X obj 391 -35 clip 1 10000;
+#X obj 481 -25 clip 1 10000;
+#X obj 636 -31 line;
+#X msg 636 -52 \$1 \$2;
+#X obj 636 -9 clip 1 10000;
+#X obj 456 -104 route attack decay sustain release;
+#X connect 0 0 26 4;
+#X connect 1 0 18 0;
+#X connect 2 0 5 1;
+#X connect 3 0 4 1;
+#X connect 4 0 18 1;
+#X connect 5 0 4 0;
+#X connect 6 0 1 0;
+#X connect 6 1 5 0;
+#X connect 7 0 16 0;
+#X connect 8 0 7 0;
+#X connect 8 1 20 0;
+#X connect 9 0 11 0;
+#X connect 10 0 9 1;
+#X connect 11 0 15 0;
+#X connect 12 0 13 0;
+#X connect 13 0 17 0;
+#X connect 14 0 13 2;
+#X connect 15 0 33 0;
+#X connect 16 0 9 0;
+#X connect 16 1 12 0;
+#X connect 17 0 15 0;
+#X connect 18 0 8 0;
+#X connect 19 0 20 1;
+#X connect 20 0 22 0;
+#X connect 21 0 22 1;
+#X connect 22 0 13 1;
+#X connect 25 0 50 0;
+#X connect 26 0 27 0;
+#X connect 27 0 15 0;
+#X connect 28 0 26 2;
+#X connect 29 0 26 0;
+#X connect 29 1 28 0;
+#X connect 30 0 32 1;
+#X connect 31 0 32 0;
+#X connect 32 0 12 1;
+#X connect 34 0 49 0;
+#X connect 35 0 6 0;
+#X connect 35 1 1 1;
+#X connect 36 0 48 0;
+#X connect 37 0 26 1;
+#X connect 38 0 28 1;
+#X connect 39 0 26 3;
+#X connect 45 0 40 0;
+#X connect 45 1 41 0;
+#X connect 45 2 42 0;
+#X connect 45 3 43 0;
+#X connect 46 0 45 0;
+#X connect 47 0 44 0;
+#X connect 48 0 47 0;
+#X connect 49 0 35 0;
+#X connect 50 1 29 0;
+#X connect 59 0 63 0;
+#X connect 60 0 64 0;
+#X connect 61 0 65 0;
+#X connect 62 0 66 0;
+#X connect 63 0 40 0;
+#X connect 64 0 41 0;
+#X connect 65 0 42 0;
+#X connect 66 0 43 0;
+#X connect 67 0 75 0;
+#X connect 68 0 67 0;
+#X connect 69 0 76 0;
+#X connect 70 0 69 0;
+#X connect 71 0 73 0;
+#X connect 72 0 71 0;
+#X connect 73 0 61 0;
+#X connect 74 0 80 0;
+#X connect 75 0 59 0;
+#X connect 76 0 60 0;
+#X connect 77 0 79 0;
+#X connect 78 0 77 0;
+#X connect 79 0 62 0;
+#X connect 80 0 68 0;
+#X connect 80 1 70 0;
+#X connect 80 2 72 0;
+#X connect 80 3 78 0;
+#X coords 0 684 1 683 150 130 0;
