@@ -94,9 +94,10 @@ public class OSCHandler : MonoBehaviour
 	/// </summary>
 	public void Init()
 	{
-        //Initialize OSC clients (transmitters)
-        //Example:		
-        //CreateClient("SuperCollider", IPAddress.Parse("127.0.0.1"), 5555);
+		//Initialize OSC clients (transmitters)
+		//Example:		
+		//CreateClient("SuperCollider", IPAddress.Parse("127.0.0.1"), 5555);
+		CreateClient("PD", IPAddress.Parse("127.0.0.1"), 1234);
 
         //Initialize OSC servers (listeners)
         //Example:
@@ -130,7 +131,9 @@ public class OSCHandler : MonoBehaviour
 	/// </summary>
 	void OnApplicationQuit() 
 	{
-		foreach(KeyValuePair<string,ClientLog> pair in _clients)
+		Instance.SendMessageToClient("PD", "/Spacey/PD/controls", "stop");
+
+		foreach (KeyValuePair<string,ClientLog> pair in _clients)
 		{
 			pair.Value.client.Close();
 		}
