@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CameraLean : MonoBehaviour {
+public class WarpLean : MonoBehaviour {
+
 	public float RotAmt = 5;
 
 	//public Vector3 MaxRotAbs = new Vector3(10, 10, 10);
@@ -22,23 +23,21 @@ public class CameraLean : MonoBehaviour {
 		RestAngles = transform.localEulerAngles;
 		RotTo = transform.localEulerAngles;
 	}
-	
+
 	// Update is called once per frame
 	void Update () {
 		Vector3 RotTo = RestAngles;
 
 		if (Input.GetKey(KeyCode.D)) {
-			RotTo -= new Vector3(0, -RotAmt, RotAmt);
-		}
-		else if (Input.GetKey(KeyCode.A)) {
+			RotTo += new Vector3(0, RotAmt, 0);
+		} else if (Input.GetKey(KeyCode.A)) {
 			//transform.eulerAngles -= new Vector3(0, Time.deltaTime * Speed, 0);
-			RotTo += new Vector3(0, -RotAmt, RotAmt);
+			RotTo -= new Vector3(0, RotAmt, 0);
 		}
 		if (Input.GetKey(KeyCode.W)) {
 			//transform.eulerAngles += new Vector3(Time.deltaTime * Speed, 0, 0);
 			RotTo += new Vector3(RotAmt, 0, 0);
-		}
-		else if (Input.GetKey(KeyCode.S)) {
+		} else if (Input.GetKey(KeyCode.S)) {
 			//transform.eulerAngles -= new Vector3(Time.deltaTime * Speed, 0, 0);
 			RotTo -= new Vector3(RotAmt, 0, 0);
 		}
@@ -51,7 +50,7 @@ public class CameraLean : MonoBehaviour {
 	}
 
 
-	private Vector3 Slerp(Vector3 start, Vector3 end, float t) {
+	private Vector3 Slerp (Vector3 start, Vector3 end, float t) {
 		float x = Mathf.SmoothStep(start.x, end.x, t);
 		float y = Mathf.SmoothStep(start.y, end.y, t);
 		float z = Mathf.SmoothStep(start.z, end.z, t);

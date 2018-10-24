@@ -21,36 +21,41 @@ public class GameMain : MonoBehaviour {
 
 	private SoundManager SoundMan;
 
+	private Vector3 curr;
+
 	// Use this for initialization
 	void Start () {
 		ScoreText = GameObject.Find("ScoreText").GetComponent<Text>();
 		SoundMan = GameObject.Find("SoundManager").GetComponent<SoundManager>();
 		SetScore(0);
+		curr = transform.localEulerAngles;
 	}
 	
 	// Update is called once per frame
 	void Update () {
 		Vector3 dir = transform.forward;
-		Vector3 right = transform.right;
+		//Vector3 right = transform.right;
 		transform.position += dir * Time.deltaTime * Speed;
-		IsRotating = false;
-
 
 		if (Input.GetKey(KeyCode.D)) {
-			transform.eulerAngles += new Vector3(0, Time.deltaTime * Speed, 0);
-			IsRotating = true;
+			transform.RotateAround(transform.position, transform.up, Time.deltaTime * TurnSpeed * 2);
 		}
-		if (Input.GetKey(KeyCode.A)) {
-			transform.eulerAngles -= new Vector3(0, Time.deltaTime * Speed, 0);
-			IsRotating = true;
+		else if (Input.GetKey(KeyCode.A)) {
+			transform.RotateAround(transform.position, transform.up, -Time.deltaTime * TurnSpeed * 2);
 		}
-		if (Input.GetKey(KeyCode.W)) {
-			transform.eulerAngles += new Vector3(Time.deltaTime * Speed, 0, 0);
-			IsRotating = true;
-		}
+
 		if (Input.GetKey(KeyCode.S)) {
-			transform.eulerAngles -= new Vector3(Time.deltaTime * Speed, 0, 0);
-			IsRotating = true;
+			transform.RotateAround(transform.position, transform.right, -Time.deltaTime * TurnSpeed);
+		}
+		else if (Input.GetKey(KeyCode.W)) {
+			transform.RotateAround(transform.position, transform.right, Time.deltaTime * TurnSpeed);
+		}
+
+		if (Input.GetKey(KeyCode.Q)) {
+			transform.RotateAround(transform.position, transform.forward, Time.deltaTime * TurnSpeed);
+		}
+		else if (Input.GetKey(KeyCode.E)) {
+			transform.RotateAround(transform.position, transform.forward, -Time.deltaTime * TurnSpeed);
 		}
 
 		float x = transform.position.x;
