@@ -74,9 +74,9 @@ as a patch called [diy-adsr~] that can be re-used as an abstraction.
 We use this envelope to shape the overall volume \, as well as add
 countour to the filter [vcf~] object.;
 #X obj 701 -64 vsl 12 60 1 10000 1 1 empty empty A 0 -9 0 10 -262144
--1 -1 3946 1;
+-1 -1 2363 1;
 #X obj 736 -64 vsl 12 60 1 10000 1 1 empty empty D 0 -9 0 10 -262144
--1 -1 3342 1;
+-1 -1 3695 1;
 #X obj 772 -64 vsl 12 60 0 1 0 1 empty empty S 0 -9 0 10 -262144 -1
 -1 0 1;
 #X obj 806 -64 vsl 12 60 1 30000 1 1 empty empty R 0 -9 0 10 -262144
