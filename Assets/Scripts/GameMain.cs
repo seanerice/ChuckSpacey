@@ -19,7 +19,7 @@ public class GameMain : MonoBehaviour {
 
 	public ParticleSystem WarpParticles;
 
-	private SoundManager SoundMan;
+	//private SoundManager SoundMan;
 
 	private Vector3 curr;
 
@@ -29,7 +29,7 @@ public class GameMain : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		ScoreText = GameObject.Find("ScoreText").GetComponent<Text>();
-		SoundMan = GameObject.Find("SoundManager").GetComponent<SoundManager>();
+		//SoundMan = GameObject.Find("SoundManager").GetComponent<SoundManager>();
 		SetScore(0);
 		curr = transform.localEulerAngles;
 	}
@@ -79,12 +79,12 @@ public class GameMain : MonoBehaviour {
 		Score = i;
 		ScoreText.text = "Score: " + Score;
 		// Send OSC message to PD
-		SoundMan.SetScore(Score);
+		//SoundMan.SetScore(Score);
 	}
 
 	private void AddScore() {
 		SetScore(Score + 1);
-		OSCHandler.Instance.SendMessageToClient("PD", "/Spacey/PD/pickup", "bang");
+		//OSCHandler.Instance.SendMessageToClient("PD", "/Spacey/PD/pickup", "bang");
 		switch (Score){
 			default:
 				break;
