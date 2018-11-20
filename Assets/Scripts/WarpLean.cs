@@ -17,36 +17,23 @@ public class WarpLean : MonoBehaviour {
 	private bool countX = false, countY = false, countZ = false;
 	private Vector3 Rot;
 
+	public float smoothTime = 0.5f;
+
+	private Vector3 vel;
+	private Transform target;
+
 	// Use this for initialization
 	void Start () {
 		Rot = transform.localEulerAngles;
 		RestAngles = transform.localEulerAngles;
 		RotTo = transform.localEulerAngles;
+		target = GameObject.Find("Player").transform;
 	}
 
 	// Update is called once per frame
 	void Update () {
-		Vector3 RotTo = RestAngles;
-
-		if (Input.GetKey(KeyCode.D)) {
-			RotTo += new Vector3(0, RotAmt, 0);
-		} else if (Input.GetKey(KeyCode.A)) {
-			//transform.eulerAngles -= new Vector3(0, Time.deltaTime * Speed, 0);
-			RotTo -= new Vector3(0, RotAmt, 0);
-		}
-		if (Input.GetKey(KeyCode.W)) {
-			//transform.eulerAngles += new Vector3(Time.deltaTime * Speed, 0, 0);
-			RotTo += new Vector3(RotAmt, 0, 0);
-		} else if (Input.GetKey(KeyCode.S)) {
-			//transform.eulerAngles -= new Vector3(Time.deltaTime * Speed, 0, 0);
-			RotTo -= new Vector3(RotAmt, 0, 0);
-		}
-
-		//RotTo = new Vector3(Mathf.Repeat(RotTo.x, 360), Mathf.Repeat(RotTo.y, 360), Mathf.Repeat(RotTo.z, 360));
-		Vector3 diff = (RotTo - Rot) * Time.deltaTime * 2;
-		Vector3 RotFin = Rot + diff;
-		transform.localEulerAngles = RotFin;
-		Rot = RotFin;
+		transform.position = Vector3.SmoothDamp(transform.position, target.position, ref vel, smoothTime, 100, Time.deltaTime);
+		transform.LookAt(target.position + target.forward);
 	}
 
 

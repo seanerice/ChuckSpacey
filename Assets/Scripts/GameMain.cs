@@ -23,6 +23,9 @@ public class GameMain : MonoBehaviour {
 
 	private Vector3 curr;
 
+	private Vector3 axisTime;
+	private bool countx = false, county = false, countz = false;
+
 	// Use this for initialization
 	void Start () {
 		ScoreText = GameObject.Find("ScoreText").GetComponent<Text>();
@@ -33,6 +36,8 @@ public class GameMain : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+
+
 		Vector3 dir = transform.forward;
 		//Vector3 right = transform.right;
 		transform.position += dir * Time.deltaTime * Speed;
@@ -52,10 +57,10 @@ public class GameMain : MonoBehaviour {
 		}
 
 		if (Input.GetKey(KeyCode.Q)) {
-			transform.RotateAround(transform.position, transform.forward, Time.deltaTime * TurnSpeed);
+			transform.RotateAround(transform.position, transform.forward, Time.deltaTime * TurnSpeed * 5);
 		}
 		else if (Input.GetKey(KeyCode.E)) {
-			transform.RotateAround(transform.position, transform.forward, -Time.deltaTime * TurnSpeed);
+			transform.RotateAround(transform.position, transform.forward, -Time.deltaTime * TurnSpeed * 5);
 		}
 
 		float x = transform.position.x;
@@ -91,6 +96,9 @@ public class GameMain : MonoBehaviour {
 	}
 
 	private void OnCollisionEnter (Collision collision) {
-		AddScore();
+		if (collision.gameObject.name == "Objective") {
+			AddScore();
+			collision.gameObject.transform.position = new Vector3(Random.Range(LowerBounds.x, UpperBounds.x), Random.Range(LowerBounds.y, UpperBounds.y), Random.Range(LowerBounds.z, UpperBounds.z));
+		}
 	}
 }
