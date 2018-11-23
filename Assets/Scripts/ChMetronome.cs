@@ -4,10 +4,22 @@ using UnityEngine;
 
 public class ChMetronome : MonoBehaviour {
 
+	public delegate void BeatAction (int beat);
+	public static event BeatAction OnBeat;
+
+	public delegate void DownBeatAction (int bar);
+	public static event DownBeatAction OnDownBeat; 
+
 	ChuckSubInstance myChuck;
 	ChuckEventListener BeatEventListener;
 	ChuckIntSyncer IsMetOn;
 	ChuckIntSyncer Tempo;
+
+	int CurrBeat = 0;
+	int CurrBar = 0;
+
+	public int Beats = 4;
+	public int Bars = 4;
 
 	void Start () {
 		myChuck = GetComponent<ChuckSubInstance>();
@@ -46,7 +58,6 @@ public class ChMetronome : MonoBehaviour {
 					env.keyOn();
 					1 => bottle.noteOn;
 				}
-				
 				BeatDur => now;
 			}
 		");
@@ -66,33 +77,38 @@ public class ChMetronome : MonoBehaviour {
 		Tempo.SyncInt(myChuck, "Tempo");
 
 		// Set initial params on metronome
-		MetOn();
+		//MetOn();
 		SetTempo(120);
 	}
 
 	// Update is called once per frame
 	void Update () {
-		MetOn();
-		SetTempo(120);
+		//MetOn();
+		//SetTempo(120);
 	}
 
 	public void MetOn() {
 		IsMetOn.SetNewValue(1);
-		Debug.Log(IsMetOn.GetCurrentValue());
+		//Debug.Log(IsMetOn.GetCurrentValue());
 	}
 
 	public void MetOff() {
 		IsMetOn.SetNewValue(0);
-		Debug.Log(IsMetOn.GetCurrentValue());
+		//Debug.Log(IsMetOn.GetCurrentValue());
 	}
 
 	public void SetTempo(int tempo) {
 		Tempo.SetNewValue(tempo);
 		myChuck.BroadcastEvent("TempoEvent");
-		Debug.Log(Tempo.GetCurrentValue());
+		//Debug.Log(Tempo.GetCurrentValue());
 	}
 
 	private void BeatEventCallback() {
-		Debug.Log("Beat");
+		CurrBeat = (CurrBeat + 1) % Beats;
+		OnBeat(CurrBeat);
+		if (CurrBeat == 0) {
+			OnDownBeat(CurrBar);
+		}
+		//Debug.Log("Beat");
 	}
 }

@@ -1,24 +1,31 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
-public class ChDrums : MonoBehaviour {
-
-	ChuckSubInstance myChuck;
-	ChuckEventListener BeatEventListener;
-	ChuckIntSyncer Tempo;
-	ChuckIntSyncer PatternIndex;
-
-	public string[] Filenames;
+public class ChDrums : ChInstrument {
 
 	void Start () {
+		main = GetComponent<ChuckMainInstance>();
 		myChuck = GetComponent<ChuckSubInstance>();
 		myChuck.RunCode(@"
 			// Global Variables
 			120 => global int Tempo;
-			0 => int PatternIndex;
-			global int TempPattern[16];
-			
+			0 => global int PatternIndex;
+			global int pattern0[16];
+			global int pattern1[16];
+			global int pattern2[16];
+			global int pattern3[16];
+			global int pattern4[16];
+			global int pattern5[16];
+			global int pattern6[16];
+			global int pattern7[16];
+			global int pattern8[16];
+			global int pattern9[16];
+			global int pattern10[16];
+			global int pattern11[16];
+
 			// Global Events
 			global Event TempoEvent;
 			global Event DownbeatEvent;
@@ -27,6 +34,7 @@ public class ChDrums : MonoBehaviour {
 			// We can update metronome tempo by changing Tempo and then triggering TempoEvent
 			125::ms => dur StepDur;
 
+			//
 			fun void UpdateTempoEvent(Event e) {
 				while(true) {
 					e => now;
@@ -34,7 +42,8 @@ public class ChDrums : MonoBehaviour {
 					//<<<""Tempo set"", Tempo>>>;
 				}
 			}
-
+			
+			// Get the downbeat from ChMetronome and do something
 			fun void DownBeatEvent(Event e) {
 				while (true) {
 					e => now;
@@ -43,14 +52,26 @@ public class ChDrums : MonoBehaviour {
 			}
 
 			int NoteOn[12][16];
+			// Copy pattern data from the TempoEvent variable into the appropriate track using PatternIndex
 			fun void SetAttackPattern(Event e) {
 				while (true) {
 					e => now;
-					TempPattern @=> NoteOn[PatternIndex];
-					<<<NoteOn[0][0]>>>;
+					pattern0 @=> NoteOn[0];
+					pattern1 @=> NoteOn[1];
+					pattern2 @=> NoteOn[2];
+					pattern3 @=> NoteOn[3];
+					pattern4 @=> NoteOn[4];
+					pattern5 @=> NoteOn[5];
+					pattern6 @=> NoteOn[6];
+					pattern7 @=> NoteOn[7];
+					pattern8 @=> NoteOn[8];
+					pattern9 @=> NoteOn[9];
+					pattern10 @=> NoteOn[10];
+					pattern11 @=> NoteOn[11];
 				}
 			}
-
+			
+			// Spork event handling threads
 			spork ~ UpdateTempoEvent(TempoEvent);
 			spork ~ DownBeatEvent(DownbeatEvent);
 			spork ~ SetAttackPattern(SetAttackPatternEvent);
@@ -81,55 +102,42 @@ public class ChDrums : MonoBehaviour {
 				.9 => buffers[i].gain;
 				buffers[i] => dac;
 			}
-
-			1 => int isPlaying;
+			
+			0 => global int isPlaying;
 			16 => int steps;
 			0 => int currStep;
+
+			// Loop forever
 			while(true)
 			{
 				if (isPlaying) {
+					<<<NoteOn[0][currStep], NoteOn[1][currStep], NoteOn[2][currStep], NoteOn[3][currStep]>>>;
 					for (0 => int i; i < 12; i++) {
 						NoteOn[i][currStep] => int atk;
 						if (atk > 0) {
 							0 => buffers[i].pos;
 						}
 					}
-
+					
 					(currStep + 1) % steps => currStep;
 					StepDur => now;
 				} else {
-					1000::ms => now;
+					1::ms => now;
 				}
 			}
 		");
 
-		// Create value syncers
-		Tempo = gameObject.AddComponent<ChuckIntSyncer>();
-		PatternIndex = gameObject.AddComponent<ChuckIntSyncer>();
+		Init();
+		//base.Start();
+	}
 
-		// Start syncing
-		Tempo.SyncInt(myChuck, "Tempo");
-		PatternIndex.SyncInt(myChuck, "PatternIndex");
-
-		// Set initial params
-		SetTempo(120);
+	new void Init() {
+		base.Init();
 	}
 
 	// Update is called once per frame
 	void Update () {
-		SetAttackPattern(0, new long[] { 1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0 });
-		SetTempo(120);
-	}
-
-	public void SetTempo (int tempo) {
-		Tempo.SetNewValue(tempo);
-		myChuck.BroadcastEvent("TempoEvent");
-		Debug.Log(Tempo.GetCurrentValue());
-	}
-
-	public void SetAttackPattern(int index, long[] AttackPattern) {
-		PatternIndex.SetNewValue(index);
-		myChuck.SetIntArray("TempPattern", AttackPattern);
-		myChuck.BroadcastEvent("SetAttackPatternEvent");
+		// SetAttackPattern(0, new long[] { 1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0 });
+		// SetTempo(120);
 	}
 }
