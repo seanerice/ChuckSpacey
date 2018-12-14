@@ -4,6 +4,8 @@ My final project is roughly based on the Reactable product, which promotes real-
 
 This project is build entirely in Chunity. Yay! No more separate executables!
 
+**Get the latest release [here](https://github.com/seanerice/ChuckSpacey/releases/tag/v0.1)**
+
 ## Block Types
 
 Curently the following block types are implemented:
