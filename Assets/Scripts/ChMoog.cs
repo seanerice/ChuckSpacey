@@ -17,8 +17,8 @@ public class ChMoog : ChInstrument {
 				Moog moog => dac;
     
 				fun void playNote(float attack, int midiNote) {
-					64 => float filterQ;
-					128 => float filterSweep;
+					0 => float filterQ;
+					0 => float filterSweep;
 					//Math.random2f( 0, 128 ) => float vol;
 					//Math.random2f( 0, 128 ) => float vibratoFreq;
 					//Math.random2f( 0, 128 ) => float vibratoGain;
@@ -35,6 +35,68 @@ public class ChMoog : ChInstrument {
 				}
 			}
 
+			class Synth extends Instrument {
+
+				BlitSaw osc1, osc2, osc3;
+
+				// Envelope Generator
+				250 => int attack;
+				250 => int decay;
+				1 => int sustain;
+				ADSR env1, env2, env3;
+				env1.set(attack::ms, decay::ms, 1, decay::ms);
+				env2.set(attack::ms, decay::ms, 1, decay::ms);
+				env3.set(attack::ms, decay::ms, 1, decay::ms);
+
+				// Filter
+				LPF lpf1, lpf2, lpf3;
+				1 => float q;
+				2500 => float cutoff;
+				q => lpf1.Q;
+				q => lpf2.Q;
+				q => lpf3.Q;
+				cutoff => lpf1.freq;
+				cutoff => lpf2.freq;
+				cutoff => lpf3.freq;
+				0.5 => float egInt;
+
+				osc1 => env1 => lpf1 => dac;
+				osc2 => env2 => lpf2 => dac;
+				osc3 => env3 => lpf3 => dac;
+
+				fun void playNote(float atk, int midi) {
+					 // Update filter values
+					q => lpf1.Q;
+					q => lpf2.Q;
+					q => lpf3.Q;
+					cutoff => lpf1.freq;
+					cutoff => lpf2.freq;
+					cutoff => lpf3.freq;
+        
+					// Update envelope generator values
+					env1.set(attack::ms, decay::ms, 1, decay::ms);
+					env2.set(attack::ms, decay::ms, 1, decay::ms);
+					env3.set(attack::ms, decay::ms, 1, decay::ms);
+        
+					Std.mtof(midi) => osc1.freq;
+        
+					env1.keyOn();
+					//env2.keyOn();
+					//env3.keyOn();
+					256 => int subintervals;
+					if (subintervals > attack) {
+						attack => subintervals;
+					}
+					for(0 => int i; i < subintervals; i++) {
+						(attack/subintervals)::ms => now;
+						10000*egInt*(i/(subintervals-1)$float)*egInt + cutoff => float f;
+						f => lpf1.freq;
+						f => lpf2.freq;
+						f => lpf3.freq;
+					}
+				}
+			}
+
 			// Global Variables
 			120 => global int Tempo;
 			global int midi0[16];
@@ -45,6 +107,7 @@ public class ChMoog : ChInstrument {
 			global Event DownbeatEvent;
 			global Event SetAttackPatternEvent;
 			global Event SetMidiNotesEvent;
+			global Event LoadEvent;
 
 			// We can update metronome tempo by changing Tempo and then triggering TempoEvent
 			125::ms => dur StepDur;
@@ -94,7 +157,7 @@ public class ChMoog : ChInstrument {
 			16 => int steps;
 			0 => int currStep;
 
-			MoogSynth ms1;
+			Synth ms1;
 
 			// Loop forever
 			while(true)
@@ -105,8 +168,12 @@ public class ChMoog : ChInstrument {
 					if (atk > 0) {
 						ms1.playNote(1, midi);
 					}
-					
 					(currStep + 1) % steps => currStep;
+
+					if (currStep == steps - 1) {
+						LoadEvent.broadcast();
+					}
+
 					StepDur => now;
 				} else {
 					1::ms => now;

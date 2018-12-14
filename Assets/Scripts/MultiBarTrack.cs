@@ -6,7 +6,7 @@ using UnityEngine;
 public class MultiBarTrack : MonoBehaviour {
 
 	ChMetronome Metronome;
-	ChInstrument Instrument;
+	public ChInstrument Instrument;
 
 	public long[][][] PatternBank;
 	public long[][][] MidiNotes;
@@ -27,6 +27,8 @@ public class MultiBarTrack : MonoBehaviour {
 		
 		// Add our downbeat event trigger to the metronome object
 		ChMetronome.OnDownBeat += this.OnDownBeat;
+		ChMetronome.OnBeat += OnBeat;
+		Instrument.OnLoad += OnLoad;
 
 		// Create pattern bank
 		InitPatternBank(Bars, Voices, StepsPerBar);
@@ -95,12 +97,20 @@ public class MultiBarTrack : MonoBehaviour {
 			Instrument.Play();
 		} else if (IsPlaying) {
 			CurrBar = (CurrBar + 1) % Bars;
-			LoadBar(CurrBar);
+			//LoadBar(CurrBar);
 		}
 		Debug.Log(CurrBar);
 	}
 
+	void OnBeat(int beat) {
+
+	}
+
 	public void PlayOnDownbeat () {
 		PlayReqDb = true;
+	}
+
+	void OnLoad() {
+		LoadBar((CurrBar + 1) % Bars);
 	}
 }

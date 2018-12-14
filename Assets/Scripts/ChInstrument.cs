@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class ChInstrument : MonoBehaviour {
 
+	public delegate void LoadAction ();
+	public event LoadAction OnLoad;
 
 	protected ChuckMainInstance main;
 
@@ -12,6 +14,7 @@ public class ChInstrument : MonoBehaviour {
 	protected ChuckIntSyncer Tempo;
 	protected ChuckIntSyncer PatternIndex;
 	protected ChuckIntSyncer IsPlaying;
+	protected ChuckEventListener LoadEventListener;
 
 	public string[] Filenames;
 
@@ -87,10 +90,12 @@ public class ChInstrument : MonoBehaviour {
 		// Create value syncers
 		Tempo = gameObject.AddComponent<ChuckIntSyncer>();
 		IsPlaying = gameObject.AddComponent<ChuckIntSyncer>();
+		LoadEventListener = gameObject.AddComponent<ChuckEventListener>();
 
 		// Start syncing
 		Tempo.SyncInt(myChuck, "Tempo");
 		IsPlaying.SyncInt(myChuck, "isPlaying");
+		LoadEventListener.ListenForEvent(myChuck, "LoadEvent", OnLoadEvent);
 
 		// Subscribe the PlayOnBeat method to OnBeat event of ChMetronome
 		ChMetronome.OnBeat += PlayOnBeat;
@@ -109,6 +114,10 @@ public class ChInstrument : MonoBehaviour {
 	public void Stop () {
 		PlayRequest = false;
 		IsPlaying.SetNewValue(0);
+	}
+
+	void OnLoadEvent() {
+		OnLoad();
 	}
 
 	public void SetTempo (int tempo) {

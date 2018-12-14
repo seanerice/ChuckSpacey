@@ -39,7 +39,7 @@ public class ChMetronome : MonoBehaviour {
 				while(true) {
 					e => now;
 					(60*1000/Tempo $ int)::ms => BeatDur;
-					//<<<""Tempo set"", Tempo>>>;
+					//<<<""Tempo set"", Tempo>> >;
 				}
 			}
 
@@ -78,7 +78,7 @@ public class ChMetronome : MonoBehaviour {
 
 		// Set initial params on metronome
 		//MetOn();
-		SetTempo(120);
+		//SetTempo(120);
 	}
 
 	// Update is called once per frame

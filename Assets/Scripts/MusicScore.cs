@@ -18,13 +18,14 @@ public class MusicScore : MonoBehaviour {
 
 		// 
 		Metronome.MetOff();
+		Metronome.SetTempo(100);
 
 		Score(0);
 	}
 	
 	// Update is called once per frame
 	void Update () {
-
+		//Score(0);
 	}
 
 	public void Score(int s) {
@@ -33,6 +34,9 @@ public class MusicScore : MonoBehaviour {
 				//MoogTrack.PlayOnDownbeat();
 				//SamplerATrack.PlayOnDownbeat();
 				// Load temp patterns into bank
+
+				SamplerATrack.Instrument.SetTempo(100);
+				MoogTrack.Instrument.SetTempo(100);
 
 				// Bar 1
 				MoogTrack.SetMidiNotes(0, 0, new long[16]	{ 47, 0, 50, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 });
@@ -53,8 +57,8 @@ public class MusicScore : MonoBehaviour {
 				//SetPattern(1, 2, new long[16] { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 });
 
 				// Bar 3
-				MoogTrack.SetMidiNotes(2, 0, new long[16] { 40, 0, 43, 0, 47, 0, 57, 0, 55, 0, 40, 0, 43, 0, 47, 0 });
-				MoogTrack.SetPattern(2, 0, new long[16] { 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0 });
+				MoogTrack.SetMidiNotes(2, 0, new long[16] { 40, 0, 43, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 });
+				MoogTrack.SetPattern(2, 0, new long[16] { 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 });
 				SamplerATrack.SetPattern(2, 0, new long[16] { 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 });
 				SamplerATrack.SetPattern(2, 1, new long[16] { 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0 });
 				//SamplerATrack.SetPattern(2, 1, new long[16] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 });
@@ -62,8 +66,8 @@ public class MusicScore : MonoBehaviour {
 				//SamplerATrack.SetPattern(2, 3, new long[16] { 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0 });
 
 				// Bar 4
-				MoogTrack.SetMidiNotes(3, 0, new long[16] { 40, 0, 43, 0, 47, 0, 57, 0, 55, 0, 40, 0, 43, 0, 47, 0 });
-				MoogTrack.SetPattern(3, 0, new long[16] { 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0 });
+				MoogTrack.SetMidiNotes(3, 0, new long[16] { 40, 0, 43, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 });
+				MoogTrack.SetPattern(3, 0, new long[16] { 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 });
 				SamplerATrack.SetPattern(3, 0, new long[16] { 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 });
 				SamplerATrack.SetPattern(3, 1, new long[16] { 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0 });
 				//SamplerATrack.SetPattern(3, 1, new long[16] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 });

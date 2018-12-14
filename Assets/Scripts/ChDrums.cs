@@ -30,6 +30,7 @@ public class ChDrums : ChInstrument {
 			global Event TempoEvent;
 			global Event DownbeatEvent;
 			global Event SetAttackPatternEvent;
+			global Event LoadEvent;
 
 			// We can update metronome tempo by changing Tempo and then triggering TempoEvent
 			125::ms => dur StepDur;
@@ -111,7 +112,7 @@ public class ChDrums : ChInstrument {
 			while(true)
 			{
 				if (isPlaying) {
-					<<<NoteOn[0][currStep], NoteOn[1][currStep], NoteOn[2][currStep], NoteOn[3][currStep]>>>;
+					//<<<NoteOn[0][currStep], NoteOn[1][currStep], NoteOn[2][currStep], NoteOn[3][currStep]>>>;
 					for (0 => int i; i < 12; i++) {
 						NoteOn[i][currStep] => int atk;
 						if (atk > 0) {
@@ -120,6 +121,11 @@ public class ChDrums : ChInstrument {
 					}
 					
 					(currStep + 1) % steps => currStep;
+					
+					if (currStep == steps - 1) {
+						LoadEvent.broadcast();
+					}
+
 					StepDur => now;
 				} else {
 					1::ms => now;

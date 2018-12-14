@@ -78,6 +78,7 @@ public class GameMain : MonoBehaviour {
 	private void SetScore(int i) {
 		Score = i;
 		ScoreText.text = "Score: " + Score;
+		GameObject.Find("MusicalScore").GetComponent<MusicalScore>().Score(Score);
 		// Send OSC message to PD
 		//SoundMan.SetScore(Score);
 	}
@@ -85,14 +86,6 @@ public class GameMain : MonoBehaviour {
 	private void AddScore() {
 		SetScore(Score + 1);
 		//OSCHandler.Instance.SendMessageToClient("PD", "/Spacey/PD/pickup", "bang");
-		switch (Score){
-			default:
-				break;
-			case 1:
-				break;
-			case 2:
-				break;
-		}
 	}
 
 	private void OnCollisionEnter (Collision collision) {
