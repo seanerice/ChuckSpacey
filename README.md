@@ -39,6 +39,14 @@ I have learned quite a bit about Chunity from this project. I developed several 
 **Multi-Connection**
 Allow the user to pipe multiple streams both in and out. Chuck is already capable of this, it's just a matter of implementing this in the Unity interface.
 
+**UI System**
+* Load clips from file
+* Pattern editor
+
+**Audio Source Presets**
+
+**Graph Saving**
+
 # Spacey
 
 This game makes use of a data driven approach to sound synthesis.
